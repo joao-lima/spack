@@ -74,6 +74,8 @@ class Starpu(Package):
     variant('simgrid', default=False, description='Enable SimGrid support')
     variant('examples', default=True, description='Enable Examples')
     variant('blas', default=False, description='Enable BLAS related features')
+    variant('buffers', default=False, description='Increase StarPU buffers')
+    variant('stats', default=False, description='Enable statistics')
 
     depends_on("hwloc")
     depends_on("mpi", when='+mpi')
@@ -125,6 +127,12 @@ class Starpu(Package):
             config_args.append("--enable-openmp=yes")
         else:
             config_args.append("--enable-openmp=no")
+
+        if spec.satisfies('+buffers'):
+            config_args.append("--enable-maxbuffers=50")
+
+        if spec.satisfies('+stats'):
+            config_args.append("--enable-stats")
 
         configure(*config_args)
 
